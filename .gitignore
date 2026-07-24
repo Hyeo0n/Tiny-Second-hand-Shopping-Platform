@@ -6,6 +6,6 @@ __pycache__/
 venv/
 .venv/
 
-# 보고서용 문서 - 로컬 참고용으로만 보관, repo에는 코드만 올림
+# repo에는 코드만 올림
 SECURITY_NOTES.md
 secure_coding_checklist.csv
