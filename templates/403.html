@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}접근 거부{% endblock %}
+{% block container_class %}container narrow{% endblock %}
+{% block content %}
+<div class="card" style="text-align:center;">
+  <div style="font-size:40px; margin-bottom:8px;">🚫</div>
+  <h2>접근 권한이 없습니다</h2>
+  <p>이 페이지에 접근할 수 있는 권한이 없어요.</p>
+  <a class="btn btn-inline" href="{{ url_for('index') }}">홈으로 돌아가기</a>
+</div>
+{% endblock %}

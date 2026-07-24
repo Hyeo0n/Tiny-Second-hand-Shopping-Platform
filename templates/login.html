@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}로그인{% endblock %}
+{% block container_class %}container narrow{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>로그인</h2>
+  <p class="subtitle">Tiny Market에 오신 것을 환영합니다.</p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="username">사용자명</label>
+    <input type="text" id="username" name="username" maxlength="20" required>
+    <label for="password">비밀번호</label>
+    <input type="password" id="password" name="password" maxlength="128" required>
+    <button type="submit">로그인</button>
+  </form>
+  <p class="subtitle" style="margin-top:8px">계정이 없으신가요? <a href="{{ url_for('register') }}" style="color:var(--primary); font-weight:700; text-decoration:none;">회원가입</a></p>
+</div>
+{% endblock %}

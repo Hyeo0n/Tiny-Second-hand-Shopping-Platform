@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}상품 검색{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>상품 검색</h2>
+</div>
+
+<form method="get" class="inline-row">
+  <input type="text" name="q" maxlength="100" value="{{ query }}" placeholder="상품명을 입력하세요">
+  <button type="submit">검색</button>
+</form>
+
+{% if query %}
+  <h3>검색 결과 ({{ results|length }}건)</h3>
+  {% if results %}
+    <div class="product-grid">
+      {% for product in results %}
+        <a class="product-card" href="{{ url_for('view_product', product_id=product.id) }}">
+          <div class="product-card__thumb">📦</div>
+          <div class="product-card__body">
+            <div class="product-card__title">{{ product.title }}</div>
+            <div class="product-card__price">{{ "{:,}".format(product.price) }}원</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">"{{ query }}"에 대한 검색 결과가 없습니다.</div>
+  {% endif %}
+{% endif %}
+{% endblock %}

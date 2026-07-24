@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ other.username }}님과의 채팅{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>{{ other.username }}님과의 1:1 채팅</h2>
+  <div class="actions">
+    <a class="btn btn-secondary btn-inline" href="{{ url_for('view_user', user_id=other.id) }}">프로필 보기</a>
+  </div>
+</div>
+
+<div class="chat-panel">
+  <ul id="messages">
+    {% for m in history %}
+      {% set mine = current_user and m.sender_id == current_user.id %}
+      <li class="{{ 'mine' if mine }}">
+        {% if not mine %}<strong>{{ m.sender.username if m.sender else '알수없음' }}</strong>{% endif %}{{ m.content }}
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="chat-input-row">
+    <input id="chat_input" type="text" maxlength="500" placeholder="메시지를 입력하세요">
+    <button onclick="sendMessage()">전송</button>
+  </div>
+</div>
+
+<script type="text/javascript">
+  // socket/myUsername은 base.html에서 페이지 전역으로 이미 생성됨 (재사용)
+  var otherId = "{{ other.id }}";
+  socket.on('connect', function() {
+    socket.emit('join_dm', { other_id: otherId });
+  });
+  socket.on('dm_message', function(data) {
+    var mine = data.username === myUsername;
+    var messages = document.getElementById('messages');
+    var item = document.createElement('li');
+    if (mine) item.className = 'mine';
+    if (!mine) {
+      var strong = document.createElement('strong');
+      strong.textContent = data.username;
+      item.appendChild(strong);
+    }
+    item.appendChild(document.createTextNode(data.message));
+    messages.appendChild(item);
+    messages.scrollTop = messages.scrollHeight;
+  });
+  function sendMessage() {
+    var input = document.getElementById('chat_input');
+    var message = input.value;
+    if (message) {
+      socket.emit('send_dm', { other_id: otherId, message: message });
+      input.value = "";
+    }
+  }
+  document.getElementById('chat_input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') sendMessage();
+  });
+</script>
+{% endblock %}

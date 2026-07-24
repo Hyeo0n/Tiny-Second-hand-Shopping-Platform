@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}프로필{% endblock %}
+{% block container_class %}container narrow{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>프로필 관리</h2>
+  <p class="subtitle">
+    {{ user.username }} · 보유 잔액 <strong style="color:var(--text)">{{ "{:,}".format(user.balance) }}원</strong>
+  </p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="bio">소개글</label>
+    <textarea id="bio" name="bio" rows="4" maxlength="500">{{ user.bio or '' }}</textarea>
+    <label for="new_password">새 비밀번호</label>
+    <input type="password" id="new_password" name="new_password" minlength="8" maxlength="128" placeholder="변경 시에만 입력 (8자 이상)">
+    <button type="submit">프로필 업데이트</button>
+  </form>
+</div>
+{% endblock %}

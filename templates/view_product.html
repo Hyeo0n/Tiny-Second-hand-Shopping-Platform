@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ product.title }}{% endblock %}
+{% block container_class %}container narrow{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="product-card__thumb" style="border-radius:var(--radius-sm); height:160px; font-size:44px; margin-bottom:20px;">📦</div>
+  <div class="page-header" style="margin-bottom:6px;">
+    <h2 style="margin-bottom:0;">{{ product.title }}</h2>
+    {% if product.status == 'blocked' %}<span class="badge badge-danger">신고 누적으로 차단됨</span>{% endif %}
+  </div>
+  <p style="font-size:22px; font-weight:800; color:var(--primary); margin-bottom:16px;">{{ "{:,}".format(product.price) }}원</p>
+  <p>{{ product.description }}</p>
+  <p class="subtitle">판매자: <a href="{{ url_for('view_user', user_id=product.seller_id) }}" style="color:var(--primary); font-weight:700; text-decoration:none;">{{ seller.username if seller else '알 수 없음' }}</a></p>
+
+  {% if is_owner_or_admin %}
+    <div class="row-actions" style="margin-top:20px;">
+      <a class="btn btn-secondary btn-inline" href="{{ url_for('edit_product', product_id=product.id) }}">상품 수정</a>
+      <form method="post" action="{{ url_for('delete_product', product_id=product.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn-danger btn-inline" onclick="return confirm('정말 삭제하시겠습니까?')">상품 삭제</button>
+      </form>
+    </div>
+  {% else %}
+    <div class="row-actions" style="margin-top:20px;">
+      <a class="btn btn-inline" href="{{ url_for('chat_with', user_id=product.seller_id) }}" data-open-chat="{{ product.seller_id }}">판매자와 1:1 채팅</a>
+      <a class="btn btn-secondary btn-inline" href="{{ url_for('report', type='product', id=product.id) }}">신고하기</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

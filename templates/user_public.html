@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ target.username }}님의 프로필{% endblock %}
+{% block content %}
+<div class="card" style="margin-bottom:28px;">
+  <div class="page-header" style="margin-bottom:8px;">
+    <h2 style="margin-bottom:0;">{{ target.username }}</h2>
+    {% if current_user and current_user.id != target.id %}
+      <div class="actions">
+        <a class="btn btn-inline" href="{{ url_for('chat_with', user_id=target.id) }}" data-open-chat="{{ target.id }}">1:1 채팅</a>
+        <a class="btn btn-secondary btn-inline" href="{{ url_for('report', type='user', id=target.username) }}">신고하기</a>
+      </div>
+    {% endif %}
+  </div>
+  <p style="margin:0;">{{ target.bio or '작성된 소개글이 없습니다.' }}</p>
+</div>
+
+<h3>등록한 상품</h3>
+{% if products %}
+  <div class="product-grid">
+    {% for product in products %}
+      <a class="product-card" href="{{ url_for('view_product', product_id=product.id) }}">
+        <div class="product-card__thumb">📦</div>
+        <div class="product-card__body">
+          <div class="product-card__title">{{ product.title }}</div>
+          <div class="product-card__price">{{ "{:,}".format(product.price) }}원</div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">등록한 상품이 없습니다.</div>
+{% endif %}
+{% endblock %}

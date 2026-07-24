@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}회원가입{% endblock %}
+{% block container_class %}container narrow{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>회원가입</h2>
+  <p class="subtitle">몇 초면 가입이 끝나요.</p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="username">사용자명</label>
+    <input type="text" id="username" name="username" pattern="[A-Za-z0-9_]{3,20}" maxlength="20" placeholder="영문/숫자/밑줄 3~20자" required>
+    <label for="password">비밀번호</label>
+    <input type="password" id="password" name="password" minlength="8" maxlength="128" placeholder="8자 이상" required>
+    <button type="submit">회원가입</button>
+  </form>
+  <p class="subtitle" style="margin-top:8px">이미 계정이 있으신가요? <a href="{{ url_for('login') }}" style="color:var(--primary); font-weight:700; text-decoration:none;">로그인</a></p>
+</div>
+{% endblock %}

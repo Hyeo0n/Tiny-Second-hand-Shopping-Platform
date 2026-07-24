@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}관리자{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>관리자 대시보드</h2>
+</div>
+
+<h3>사용자 관리</h3>
+<div class="list">
+  {% for u in users %}
+    <div class="list-item">
+      <div>
+        <strong>{{ u.username }}</strong>
+        {% if u.is_admin %}<span class="badge">관리자</span>{% endif %}
+      </div>
+      <div class="row-actions">
+        {% if u.is_dormant %}
+          <span class="badge badge-danger">휴면</span>
+        {% else %}
+          <span class="badge badge-success">정상</span>
+        {% endif %}
+        <form method="post" action="{{ url_for('admin_toggle_dormant', user_id=u.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn-secondary btn-sm">{{ '휴면 해제' if u.is_dormant else '휴면 처리' }}</button>
+        </form>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<h3>상품 관리</h3>
+<div class="list">
+  {% for p in products %}
+    <div class="list-item">
+      <div>
+        <strong>{{ p.title }}</strong>
+        <div class="subtitle" style="margin:2px 0 0;">{{ "{:,}".format(p.price) }}원</div>
+      </div>
+      <div class="row-actions">
+        {% if p.status == 'blocked' %}
+          <span class="badge badge-danger">차단됨</span>
+        {% else %}
+          <span class="badge badge-success">판매중</span>
+        {% endif %}
+        <form method="post" action="{{ url_for('admin_toggle_block', product_id=p.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn-secondary btn-sm">{{ '차단 해제' if p.status == 'blocked' else '차단' }}</button>
+        </form>
+        <form method="post" action="{{ url_for('admin_delete_product', product_id=p.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn-danger btn-sm" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+        </form>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<h3>신고 내역</h3>
+<div class="list">
+  {% for r in reports %}
+    <div class="list-item">
+      <div>
+        <span class="badge">{{ r.target_type }}</span>
+        대상 ID: <code>{{ r.target_id }}</code> — {{ r.reason }}
+      </div>
+      <span class="subtitle" style="margin:0;">{{ r.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+    </div>
+  {% else %}
+    <div class="list-empty">신고 내역이 없습니다.</div>
+  {% endfor %}
+</div>
+{% endblock %}

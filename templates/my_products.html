@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}내 상품 관리{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>내 상품 관리</h2>
+  <div class="actions">
+    <a class="btn btn-inline" href="{{ url_for('new_product') }}">+ 새 상품 등록</a>
+  </div>
+</div>
+
+<div class="list">
+  {% for product in products %}
+    <div class="list-item">
+      <div>
+        <a class="title" href="{{ url_for('view_product', product_id=product.id) }}">{{ product.title }}</a>
+        <div class="subtitle" style="margin:2px 0 0;">{{ "{:,}".format(product.price) }}원</div>
+      </div>
+      <div class="row-actions">
+        {% if product.status == 'blocked' %}
+          <span class="badge badge-danger">차단됨</span>
+        {% else %}
+          <span class="badge badge-success">판매중</span>
+        {% endif %}
+        <a class="btn btn-secondary btn-sm" href="{{ url_for('edit_product', product_id=product.id) }}">수정</a>
+        <form method="post" action="{{ url_for('delete_product', product_id=product.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn-danger btn-sm" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+        </form>
+      </div>
+    </div>
+  {% else %}
+    <div class="list-empty">등록한 상품이 없습니다.</div>
+  {% endfor %}
+</div>
+{% endblock %}
