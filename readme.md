@@ -20,11 +20,11 @@ Flask + Flask-SocketIO + SQLAlchemy(SQLite) 기반이며,
 ### 1. 저장소 클론
 
 ```bash
-git clone https://github.com/Hyeo0n/Tiny-Second-hand-Shopping-Platform/tree/main
+git clone git clone https://github.com/Hyeo0n/Tiny-Second-hand-Shopping-Platform
 cd tiny-marketplace
 ```
 
-### 2. Python 가상환경 준비 (둘 중 하나)
+### 2. Python 가상환경 준비 (둘 중 하나로)
 
 **venv + pip**
 ```bash
